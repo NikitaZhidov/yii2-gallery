@@ -7,6 +7,7 @@ use app\models\CaptionImageForm;
 use app\models\ImageItemForm;
 use app\models\UploadForm;
 use app\models\DeleteImageForm;
+use Exception;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
@@ -47,7 +48,14 @@ class GalleryController extends Controller
             if ($postRequset["DeleteImageForm"]) {
                 $imageId = $postRequset["DeleteImageForm"]["id"];
                 $image = Image::findOne(["id" => intval($imageId)]);
-                $image->delete();
+
+                try {
+                    $image->delete();
+                } catch(\Exception $e) {
+                    return $this->render('error', [
+                        'error_message' => 'Image delete error, try again later'
+                    ]);
+                }
             }
 
             if ($postRequset["ImageItemForm"]) {
@@ -60,7 +68,13 @@ class GalleryController extends Controller
                 $image->caption = $caption;
                 $image->name = $name;
 
-                $image->save();
+                try {
+                    $image->save();
+                } catch(\Exception $e) {
+                    return $this->render('error', [
+                        'error_message' => 'Image save error, try again later'
+                    ]);
+                }
             }
         }
 
@@ -108,9 +122,23 @@ class GalleryController extends Controller
     public function actionEdit($id)
     {
         $image = Image::find()->where(['id' => $id])->one();
+        if ($image == NULL) {
+            return $this->render('error', [
+                'error_message' => "Image with id $id not found"
+            ]);
+        }
+
         if (Yii::$app->request->isPost) {
             $image->caption = Yii::$app->request->post()["Image"]["caption"];
-            $image->save();
+
+            try {
+                $image->save();
+            } catch(\Exception $e) {
+                return $this->render('error', [
+                    'error_message' => 'Image delete error, try again later'
+                ]);
+            }
+
             return $this->redirect(['gallery/index']);
         }
         $editForm = new CaptionImageForm();
@@ -123,6 +151,12 @@ class GalleryController extends Controller
     public function actionDelete($id)
     {
         $image = Image::find()->where(['id' => $id])->one();
+
+        if ($image == NULL) {
+            return $this->render('error', [
+                'error_message' => "Image with id $id not found"
+            ]);
+        }
 
         $deleteImageForm = new DeleteImageForm();
 

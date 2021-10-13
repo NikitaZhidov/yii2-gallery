@@ -86,7 +86,14 @@ class AuthController extends Controller {
                 $user->login = $registrationForm->login;
                 $user->password = sha1($registrationForm->password);
 
-                $user->save();
+                try {
+                    $user->save();
+                } catch(\Exception $e) {
+                    return $this->render('error', [
+                        'error_message' => 'Registration error, try again later'
+                    ]);
+                }
+
                 return $this->redirect(['auth/login']);
             }
         }
