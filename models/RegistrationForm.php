@@ -13,8 +13,8 @@ class RegistrationForm extends Model
     public function rules() {
         return [
             [['login', 'password', 'confirmPassword'], 'required'],
-            ['login', 'string', 'min' => 2, 'max' => 10],
-            ['password', 'string', 'min' => 2, 'max' => 10],
+            [['password', 'login'], 'string', 'min' => 2, 'max' => 16],
+            ['login', 'filter', 'filter' => 'strtolower'],
             ['confirmPassword', 'compare', 'compareAttribute' => 'password', 'message' => "Passwords don't match"],
             ['login', 'checkLogin']
         ];

@@ -13,7 +13,8 @@ class LoginForm extends Model
     {
         return [
             [['login', 'password'], 'required'],
-            [['password', 'login'], 'string', 'min' => 2, 'max' => 10],
+            [['password', 'login'], 'string', 'min' => 2, 'max' => 16],
+            ['login', 'filter', 'filter' => 'strtolower'],
             ['password', 'validatePassword']
         ];
     }
