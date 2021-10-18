@@ -43,10 +43,10 @@ class GalleryController extends Controller
     public function actionIndex()
     {
         if (Yii::$app->request->isPost) {
-            $postRequset = Yii::$app->request->post();
+            $requset = Yii::$app->request;
 
-            if ($postRequset["DeleteImageForm"]) {
-                $imageId = $postRequset["DeleteImageForm"]["id"];
+            if ($requset->post('DeleteImageForm')) {
+                $imageId = $requset->post('DeleteImageForm')["id"];
                 $image = Image::findOne(["id" => intval($imageId)]);
 
                 try {
@@ -58,10 +58,10 @@ class GalleryController extends Controller
                 }
             }
 
-            if ($postRequset["ImageItemForm"]) {
+            if ($requset->post('ImageItemForm')) {
 
-                $caption = $postRequset["ImageItemForm"]["caption"];
-                $name = $postRequset["ImageItemForm"]["name"];
+                $caption = $requset->post('ImageItemForm')["caption"];
+                $name = $requset->post('ImageItemForm')["name"];
 
                 $image = new Image();
 

@@ -27,23 +27,27 @@ $this->title = 'Image Gallery';
 
 
     <div class="gallery-wrapper">
-        <?php foreach($images as $image): ?>
-            <div class="image-item-wrapper">
-                <div class="image-wrapper">
-                    <?= Html::img("@web/$image->name") ?>
+        <?php if (count($images) > 0): ?>
+            <?php foreach($images as $image): ?>
+                <div class="image-item-wrapper">
+                    <div class="image-wrapper">
+                        <?= Html::img("@web/$image->name") ?>
+                    </div>
+                    <h4 class="image-title">
+                    #<?php echo $image->id ?>
+                        <?php echo $image->caption ?>
+                    </h4>
+                    <div class="image-edit-btns">
+                        <a class="btn btn-primary" href="<?= Url::to(['gallery/edit', 'id' => $image->id]); ?>">Edit</a>
+                        <a class="btn btn-primary" href="<?= Url::to(['gallery/delete', 'id' => $image->id]); ?>">Delete</a>
+                    </div>
                 </div>
-                <h4 class="image-title">
-                   #<?php echo $image->id ?>
-                    <?php echo $image->caption ?>
-                </h4>
-                <div class="image-edit-btns">
-                    <a class="btn btn-primary" href="<?= Url::to(['gallery/edit', 'id' => $image->id]); ?>">Edit</a>
-                    <a class="btn btn-primary" href="<?= Url::to(['gallery/delete', 'id' => $image->id]); ?>">Delete</a>
-                </div>
-            </div>
-        <?php endforeach;?>
-    </div>
-    <?= LinkPager::widget([
-        'pagination' => $pages
-    ])?>
+            <?php endforeach;?>
+        </div>
+        <?= LinkPager::widget([
+            'pagination' => $pages
+        ])?>
+    <?php else: ?>
+        No images
+    <?php endif; ?>
 </div>
